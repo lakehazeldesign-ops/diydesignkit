@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lake Hazel — DIY Design Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Karla:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/tabler-icons.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sand:#F5F0E8;--sand-dark:#E8E0D0;--clay:#C4A882;--clay-deep:#9B7D5A;
+  --charcoal:#2C2825;--warm-white:#FDFAF5;--sage:#8A9E8C;--terra:#C4714A;
+  --muted:#7A746E;--border:rgba(44,40,37,0.12);--r:2px;
+}
+html,body{height:100%;font-family:'Karla',sans-serif;background:var(--warm-white);color:var(--charcoal)}
+body{display:flex;flex-direction:column;min-height:100vh}
+.kit-header{background:var(--charcoal);padding:1.5rem 2.5rem 1.25rem;display:flex;align-items:flex-end;justify-content:space-between;flex-shrink:0}
+.kit-logo{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--clay);display:block;margin-bottom:4px}
+.kit-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:28px;color:var(--warm-white);letter-spacing:.5px;line-height:1.1}
+.kit-title em{font-style:italic;color:var(--clay)}
+.cart-pill{display:flex;align-items:center;gap:8px;background:rgba(196,168,130,.15);border:1px solid var(--clay);padding:6px 14px;border-radius:20px;cursor:pointer;color:var(--clay);font-size:12px;letter-spacing:1px;transition:background .2s;flex-shrink:0}
+.cart-pill:hover{background:rgba(196,168,130,.25)}
+.cart-count{background:var(--clay);color:var(--warm-white);width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500}
+.prog-bar{background:var(--charcoal);padding:0 2.5rem;display:flex;border-bottom:1px solid rgba(255,255,255,.08);overflow-x:auto;flex-shrink:0}
+.step-tab{flex:1;padding:10px 6px 9px;font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(253,250,245,.3);border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;text-align:center;font-family:'Karla',sans-serif;font-weight:400;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;min-width:56px}
+.step-tab:hover{color:rgba(253,250,245,.55)}
+.step-tab.active{color:var(--clay);border-bottom-color:var(--clay)}
+.step-tab.done{color:rgba(253,250,245,.45)}
+.content-wrap{flex:1;overflow-y:auto}
+.content{padding:2rem 2.5rem 3rem;min-height:460px}
+.step-panel{display:none;animation:fadeIn .25s ease}
+.step-panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.step-intro{display:flex;align-items:baseline;gap:14px;margin-bottom:1.4rem;padding-bottom:1.2rem;border-bottom:1px solid var(--border)}
+.step-num{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:300;color:var(--clay);line-height:1;min-width:30px}
+.step-heading{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300}
+.step-heading em{font-style:italic;color:var(--clay-deep)}
+.step-desc{font-size:12px;color:var(--muted);line-height:1.6;margin-top:3px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+.fl{font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;font-weight:500;display:block}
+.fi{width:100%;padding:9px 12px;border:1px solid var(--border);background:var(--warm-white);font-family:'Karla',sans-serif;font-size:13px;color:var(--charcoal);border-radius:var(--r);outline:none;transition:border-color .2s;appearance:none}
+.fi:focus{border-color:var(--clay)}
+textarea.fi{resize:vertical;min-height:75px}
+.field-group{margin-bottom:1rem}
+.tip{background:var(--sand);border-left:3px solid var(--clay);padding:12px 14px;border-radius:0 var(--r) var(--r) 0;margin:10px 0}
+.tip-t{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--clay-deep);font-weight:500;margin-bottom:4px}
+.tip-b{font-size:12px;color:var(--charcoal);line-height:1.6}
+.lrh-tip{background:var(--charcoal);color:var(--warm-white);padding:13px 16px;border-radius:var(--r);margin-top:1rem}
+.lrh-tip-t{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--clay);font-weight:500;margin-bottom:5px}
+.lrh-tip-b{font-size:12px;color:rgba(253,250,245,.75);line-height:1.6}
+.res-badge{background:var(--charcoal);color:var(--warm-white);padding:8px 14px;border-radius:var(--r);font-size:12px;font-weight:500;display:flex;align-items:center;justify-content:space-between;margin-top:.75rem}
+.res-badge span{color:var(--clay);font-family:'Cormorant Garamond',serif;font-size:20px}
+.upload-zone{border:1.5px dashed var(--clay);background:rgba(196,168,130,.04);border-radius:var(--r);padding:1.75rem;text-align:center;cursor:pointer;transition:background .2s}
+.upload-zone:hover{background:rgba(196,168,130,.09)}
+.upload-icon{font-size:26px;color:var(--clay);margin-bottom:7px}
+.ul-label{font-size:12px;color:var(--muted)}
+.ul-label strong{color:var(--clay-deep);font-weight:500}
+.file-list{margin-top:9px}
+.fchip{display:inline-flex;align-items:center;gap:5px;background:var(--sand);padding:3px 10px;border-radius:20px;font-size:11px;color:var(--charcoal);margin:2px}
+.hidden{display:none}
+.dim-row{display:grid;grid-template-columns:1fr 18px 1fr 1fr;align-items:center;gap:8px;margin-bottom:8px}
+.dim-sep{text-align:center;color:var(--muted);font-size:15px}
+.vibe-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:.8rem}
+.vibe-card{border:1.5px solid var(--border);border-radius:var(--r);padding:.9rem;cursor:pointer;transition:all .2s;position:relative}
+.vibe-card:hover{border-color:var(--clay)}
+.vibe-card.selected{border-color:var(--clay);background:rgba(196,168,130,.08)}
+.vibe-card.selected::after{content:'✓';position:absolute;top:8px;right:10px;color:var(--clay);font-size:13px}
+.vibe-sw{height:36px;border-radius:var(--r);margin-bottom:9px;display:flex;gap:3px;overflow:hidden}
+.vibe-sw span{flex:1}
+.vibe-n{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:400;margin-bottom:3px}
+.vibe-d{font-size:11px;color:var(--muted);line-height:1.5}
+.rng-wrap{display:flex;align-items:center;gap:12px}
+.rng-wrap input[type=range]{flex:1;accent-color:var(--clay);cursor:pointer}
+.rng-val{min-width:68px;text-align:right;font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--clay-deep)}
+.scale-tool{background:var(--sand);border-radius:var(--r);padding:1.3rem;margin-top:.8rem}
+.scale-vis{position:relative;height:130px;background:white;border:1px solid var(--border);border-radius:var(--r);margin:.8rem 0;overflow:hidden}
+.rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:.8rem}
+.rule-card{padding:13px 15px;border-radius:var(--r);border:1px solid var(--border)}
+.rule-card.do{border-color:var(--sage);background:rgba(138,158,140,.06)}
+.rule-card.dont{border-color:var(--terra);background:rgba(196,113,74,.06)}
+.rule-head{font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:500;margin-bottom:8px}
+.rule-card.do .rule-head{color:var(--sage)}
+.rule-card.dont .rule-head{color:var(--terra)}
+.rule-item{font-size:11.5px;color:var(--charcoal);line-height:1.75;padding:1px 0}
+.budget-row{display:grid;grid-template-columns:1fr 90px 95px;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px}
+.budget-row.hdr{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:500}
+.bbar-wrap{height:5px;background:var(--sand-dark);border-radius:3px;margin-top:3px;overflow:hidden}
+.bbar{height:100%;border-radius:3px;background:var(--clay);transition:width .5s ease}
+.btotal{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0 0;border-top:1.5px solid var(--charcoal);margin-top:4px}
+.btotal-l{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:500}
+.btotal-a{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--charcoal)}
+.finish-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:1.2rem;overflow-x:auto}
+.ftab{padding:9px 18px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;background:none;border-top:none;border-left:none;border-right:none;font-family:'Karla',sans-serif;font-weight:500;white-space:nowrap;transition:all .2s}
+.ftab:hover{color:var(--clay-deep)}
+.ftab.active{color:var(--clay-deep);border-bottom-color:var(--clay)}
+.finish-panel{display:none}
+.finish-panel.active{display:block}
+.finish-category-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:.8rem;padding-bottom:.4rem;border-bottom:1px solid var(--border)}
+.color-family-row{display:flex;gap:7px;margin-bottom:1rem;flex-wrap:wrap}
+.cf-btn{padding:5px 13px;font-size:10px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:20px;border:1px solid var(--border);background:none;color:var(--muted);font-family:'Karla',sans-serif;transition:all .2s}
+.cf-btn:hover{border-color:var(--clay);color:var(--clay-deep)}
+.cf-btn.active{border-color:var(--clay);color:var(--clay-deep);background:rgba(196,168,130,.1)}
+.swatch-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:1.4rem}
+.swatch-card{border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:border-color .2s;position:relative}
+.swatch-card:hover{border-color:var(--clay)}
+.swatch-card.selected{border-color:var(--clay-deep);border-width:2px}
+.swatch-card.selected::after{content:'✓';position:absolute;top:5px;right:7px;color:var(--charcoal);font-size:13px;font-weight:600;text-shadow:0 0 6px rgba(253,250,245,.9)}
+.swatch-color{height:72px;width:100%}
+.swatch-pattern{height:72px;width:100%;display:flex;align-items:center;justify-content:center;font-size:30px;background:var(--sand)}
+.swatch-body{padding:9px 10px;background:var(--warm-white)}
+.swatch-name{font-size:11.5px;font-weight:500;color:var(--charcoal);margin-bottom:1px;line-height:1.3}
+.swatch-meta{font-size:10px;color:var(--muted)}
+.swatch-brand{font-size:10px;color:var(--muted);margin-top:1px}
+.swatch-price{font-size:11px;color:var(--clay-deep);font-weight:500;margin-top:4px}
+.finish-add-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:var(--r);font-family:'Karla',sans-serif;font-weight:500;background:var(--charcoal);border:1px solid var(--charcoal);color:var(--warm-white);margin-top:6px;transition:all .2s}
+.finish-add-btn:hover{background:var(--clay-deep);border-color:var(--clay-deep)}
+.finish-add-btn.added{background:var(--sage);border-color:var(--sage)}
+.finish-selected-bar{background:var(--sand);border:1px solid var(--border);border-radius:var(--r);padding:11px 14px;margin-bottom:1rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.finish-chip{display:inline-flex;align-items:center;gap:7px;background:var(--warm-white);border:1px solid var(--border);border-radius:var(--r);padding:4px 10px;font-size:11px;margin:2px}
+.finish-chip-dot{width:13px;height:13px;border-radius:1px;border:1px solid rgba(0,0,0,.1);flex-shrink:0}
+.finish-chip-x{cursor:pointer;color:var(--muted);margin-left:3px;font-size:12px;font-weight:500}
+.finish-chip-x:hover{color:var(--terra)}
+.style-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;padding:3px 10px;border-radius:10px;background:rgba(196,168,130,.15);color:var(--clay-deep);margin-bottom:.6rem}
+.prod-filter-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:1rem}
+.filt-btn{padding:5px 13px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:20px;border:1px solid var(--border);background:none;color:var(--muted);font-family:'Karla',sans-serif;font-weight:500;transition:all .2s}
+.filt-btn:hover{border-color:var(--clay);color:var(--clay-deep)}
+.filt-btn.active{border-color:var(--clay);color:var(--clay-deep);background:rgba(196,168,130,.08)}
+.prod-section{margin-top:1.5rem}
+.prod-section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+.prod-section-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300}
+.prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.prod-card{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color .2s}
+.prod-card:hover{border-color:var(--clay)}
+.prod-img{height:96px;display:flex;align-items:center;justify-content:center;font-size:34px;border-bottom:1px solid var(--border);background:var(--sand)}
+.prod-body{padding:10px 11px}
+.prod-name{font-size:12.5px;font-weight:500;color:var(--charcoal);margin-bottom:2px;line-height:1.3}
+.prod-retailer{font-size:10.5px;color:var(--muted);margin-bottom:6px}
+.prod-price{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--clay-deep)}
+.prod-footer{display:flex;align-items:center;justify-content:space-between;margin-top:7px;gap:5px}
+.prod-style-tag{font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:10px;background:var(--sand);color:var(--clay-deep)}
+.btn-add{padding:5px 10px;font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:var(--r);font-family:'Karla',sans-serif;font-weight:500;background:var(--charcoal);border:1px solid var(--charcoal);color:var(--warm-white);transition:all .2s}
+.btn-add:hover{background:var(--clay-deep);border-color:var(--clay-deep)}
+.btn-add.added{background:var(--sage);border-color:var(--sage)}
+.cart-header-row{display:grid;grid-template-columns:1fr 100px 100px 30px;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.cart-item{display:grid;grid-template-columns:1fr 100px 100px 30px;gap:8px;padding:10px 0;border-bottom:1px solid var(--border);align-items:center}
+.ci-name{font-size:12.5px;font-weight:500}
+.ci-cat{font-size:10px;color:var(--muted);margin-top:2px}
+.ci-retailer{font-size:11px;color:var(--muted)}
+.ci-price{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--clay-deep);text-align:right}
+.ci-remove{cursor:pointer;color:var(--muted);font-size:14px;text-align:center;transition:color .15s}
+.ci-remove:hover{color:var(--terra)}
+.cart-total-row{display:flex;justify-content:space-between;align-items:baseline;padding:14px 0 0;border-top:1.5px solid var(--charcoal);margin-top:5px}
+.cart-total-l{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:500}
+.cart-total-a{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300}
+.cart-budget-bar{height:8px;border-radius:4px;background:var(--sand-dark);overflow:hidden;margin-top:10px}
+.cart-budget-fill{height:100%;border-radius:4px;transition:width .4s}
+.cart-budget-label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:5px}
+.section-divider{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--clay);font-weight:500;padding:10px 0 5px;margin-top:6px;border-top:1px dashed var(--border)}
+.cart-empty{text-align:center;padding:3rem 1rem;color:var(--muted)}
+
+/* ── CONTACT FORM & SUBMIT ── */
+.contact-form{background:var(--sand);border-radius:var(--r);padding:1.75rem;margin-top:1.5rem}
+.contact-form-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;margin-bottom:4px}
+.contact-form-title em{font-style:italic;color:var(--clay)}
+.contact-form-desc{font-size:12px;color:var(--muted);margin-bottom:1.25rem;line-height:1.6}
+.submit-btn{width:100%;padding:14px;font-family:'Karla',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:var(--r);font-weight:500;background:var(--charcoal);border:1px solid var(--charcoal);color:var(--warm-white);transition:all .2s;margin-top:1rem}
+.submit-btn:hover:not(:disabled){background:var(--clay-deep);border-color:var(--clay-deep)}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed}
+.submit-status{margin-top:1rem;padding:14px 16px;border-radius:var(--r);font-size:13px;display:none}
+.submit-status.success{background:rgba(138,158,140,.15);border:1px solid var(--sage);color:var(--charcoal);display:block}
+.submit-status.error{background:rgba(196,113,74,.1);border:1px solid var(--terra);color:var(--terra);display:block}
+.submit-status-title{font-weight:500;margin-bottom:4px}
+
+.summary-dark{background:var(--charcoal);border-radius:var(--r);padding:2rem;color:var(--warm-white);margin-top:1.5rem}
+.sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.sum-section{padding-bottom:1rem;margin-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.1)}
+.sum-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--clay);margin-bottom:5px;font-weight:500}
+.sum-val{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300}
+.over{color:var(--terra)!important}
+
+.nav-row{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 2.5rem;border-top:1px solid var(--border);background:var(--sand);flex-shrink:0}
+.btn-nav{padding:10px 22px;font-family:'Karla',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:var(--r);font-weight:500;transition:all .2s}
+.btn-back{background:none;border:1px solid var(--border);color:var(--muted)}
+.btn-back:hover{border-color:var(--clay);color:var(--clay-deep)}
+.btn-next{background:var(--charcoal);border:1px solid var(--charcoal);color:var(--warm-white)}
+.btn-next:hover{background:var(--clay-deep);border-color:var(--clay-deep)}
+.step-ctr{font-size:11px;color:var(--muted);letter-spacing:1px}
+
+@media(max-width:680px){
+  .kit-header{padding:1.2rem 1.25rem 1rem}
+  .prog-bar{padding:0 1.25rem}
+  .content{padding:1.5rem 1.25rem 2.5rem}
+  .nav-row{padding:1rem 1.25rem}
+  .g2,.g3,.vibe-grid,.swatch-grid,.prod-grid,.rules-grid{grid-template-columns:1fr}
+  .cart-header-row,.cart-item{grid-template-columns:1fr 80px 80px 24px}
+  .sum-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header class="kit-header">
+  <div>
+    <span class="kit-logo">Lake Hazel Design</span>
+    <h1 class="kit-title">DIY Design <em>Kit</em></h1>
+  </div>
+  <div class="cart-pill" onclick="goToStep(8)" role="button" aria-label="View my list">
+    <i class="ti ti-shopping-bag" aria-hidden="true"></i>
+    My List
+    <span class="cart-count" id="cartCount">0</span>
+  </div>
+</header>
+
+<nav class="prog-bar" aria-label="Kit steps">
+  <button class="step-tab active" onclick="goToStep(0)">01 Room</button>
+  <button class="step-tab" onclick="goToStep(1)">02 Measure</button>
+  <button class="step-tab" onclick="goToStep(2)">03 Style</button>
+  <button class="step-tab" onclick="goToStep(3)">04 Scale</button>
+  <button class="step-tab" onclick="goToStep(4)">05 Rules</button>
+  <button class="step-tab" onclick="goToStep(5)">06 Budget</button>
+  <button class="step-tab" onclick="goToStep(6)">07 Finishes</button>
+  <button class="step-tab" onclick="goToStep(7)">08 Shop</button>
+  <button class="step-tab" onclick="goToStep(8)">09 Submit</button>
+</nav>
+
+<div class="content-wrap">
+<main class="content">
+
+<!-- STEP 1 -->
+<section class="step-panel active" id="step-0">
+  <div class="step-intro"><div class="step-num">01</div><div><h2 class="step-heading">Tell us about your <em>space</em></h2><p class="step-desc">Your answers shape every recommendation — finishes, furnishings, and budget — throughout the kit.</p></div></div>
+  <div class="g2">
+    <div>
+      <div class="field-group"><label class="fl" for="roomType">Room type</label><select class="fi" id="roomType"><option value="">Select a room...</option><option>Living Room</option><option>Primary Bedroom</option><option>Guest Bedroom</option><option>Dining Room</option><option>Home Office</option><option>Kitchen</option><option>Bathroom</option><option>Nursery / Kids Room</option></select></div>
+      <div class="field-group"><label class="fl" for="roomUse">Primary use</label><textarea class="fi" id="roomUse" placeholder="Family movie nights, hosting guests, working from home..."></textarea></div>
+      <div class="field-group"><label class="fl" for="painPoints">What's not working right now?</label><textarea class="fi" id="painPoints" placeholder="Feels cluttered, no focal point, outdated finishes..."></textarea></div>
+    </div>
+    <div>
+      <label class="fl">Upload room photos</label>
+      <div class="upload-zone" onclick="document.getElementById('roomPhotos').click()"><div class="upload-icon"><i class="ti ti-camera" aria-hidden="true"></i></div><p class="ul-label"><strong>Click to upload</strong> your room photos</p><p class="ul-label" style="font-size:11px;margin-top:3px">All 4 walls · floor · existing pieces</p><div class="file-list" id="photoList"></div></div>
+      <input type="file" id="roomPhotos" class="hidden" multiple accept="image/*" onchange="handleFiles(this,'photoList')">
+      <div class="tip" style="margin-top:10px"><p class="tip-t">Photo tip</p><p class="tip-b">Shoot from each corner diagonally. Include any existing pieces you're keeping — we design around them.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 2 -->
+<section class="step-panel" id="step-1">
+  <div class="step-intro"><div class="step-num">02</div><div><h2 class="step-heading">Measure your <em>room</em></h2><p class="step-desc">Accurate dimensions drive your scale tool, tile quantity estimates, and rug sizing.</p></div></div>
+  <div class="g2">
+    <div>
+      <label class="fl" style="margin-bottom:10px">Room dimensions</label>
+      <div class="dim-row"><input class="fi" type="number" id="roomL" placeholder="Length (ft)" oninput="calcSqft()" min="0"><span class="dim-sep">×</span><input class="fi" type="number" id="roomW" placeholder="Width (ft)" oninput="calcSqft()" min="0"><input class="fi" type="number" id="roomH" placeholder="Height (ft)" oninput="calcSqft()" min="0"></div>
+      <p style="font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:1rem">Length · Width · Ceiling height</p>
+      <div class="res-badge"><span style="font-size:12px;font-weight:400;color:rgba(253,250,245,.6)">Floor square footage</span><span id="sqftVal">—</span></div>
+      <div class="res-badge" style="margin-top:6px"><span style="font-size:12px;font-weight:400;color:rgba(253,250,245,.6)">Wall square footage</span><span id="wallSqft">—</span></div>
+      <div class="res-badge" style="margin-top:6px"><span style="font-size:12px;font-weight:400;color:rgba(253,250,245,.6)">Room proportion</span><span id="ratioVal">—</span></div>
+    </div>
+    <div>
+      <div class="tip"><p class="tip-t">Measure wall to wall</p><p class="tip-b">Measure at floor level. Note any bump-outs, fireplaces, or built-ins.</p></div>
+      <div class="tip" style="margin-top:10px"><p class="tip-t">Tile quantity tip</p><p class="tip-b">Always add 10–15% overage for cuts, breakage, and future repairs. Your finish step uses your square footage automatically.</p></div>
+      <div style="margin-top:10px"><label class="fl">Floor plan upload (optional)</label><div class="upload-zone" onclick="document.getElementById('floorPlan').click()" style="padding:1.1rem"><div style="font-size:20px;color:var(--clay);margin-bottom:5px"><i class="ti ti-layout" aria-hidden="true"></i></div><p class="ul-label"><strong>Upload a sketch</strong> or floor plan</p><div class="file-list" id="planList"></div></div><input type="file" id="floorPlan" class="hidden" accept="image/*,.pdf" onchange="handleFiles(this,'planList')"></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 3 -->
+<section class="step-panel" id="step-2">
+  <div class="step-intro"><div class="step-num">03</div><div><h2 class="step-heading">Choose your <em>style</em></h2><p class="step-desc">Your selection filters every product and finish recommendation throughout the kit.</p></div></div>
+  <div class="vibe-grid" id="vibeGrid">
+    <div class="vibe-card" onclick="selectVibe(this,'Warm Organic')"><div class="vibe-sw"><span style="background:#C4A882"></span><span style="background:#8A9E8C"></span><span style="background:#E8DFD0"></span><span style="background:#5A4A3A"></span></div><p class="vibe-n">Warm Organic</p><p class="vibe-d">Natural textures, earthy tones, curved forms.</p></div>
+    <div class="vibe-card" onclick="selectVibe(this,'Modern Classic')"><div class="vibe-sw"><span style="background:#2C2825"></span><span style="background:#E0DBD4"></span><span style="background:#B8A896"></span><span style="background:#F5F0E8"></span></div><p class="vibe-n">Modern Classic</p><p class="vibe-d">Clean lines, timeless silhouettes. Brass, marble, boucle.</p></div>
+    <div class="vibe-card" onclick="selectVibe(this,'California Casual')"><div class="vibe-sw"><span style="background:#D4CFC8"></span><span style="background:#A8B5A0"></span><span style="background:#E8E0D0"></span><span style="background:#7A8C7E"></span></div><p class="vibe-n">California Casual</p><p class="vibe-d">Relaxed, coastal-adjacent. Washed woods, greens.</p></div>
+    <div class="vibe-card" onclick="selectVibe(this,'Transitional Luxe')"><div class="vibe-sw"><span style="background:#8B7355"></span><span style="background:#D4B896"></span><span style="background:#1A1612"></span><span style="background:#F0E8DC"></span></div><p class="vibe-n">Transitional Luxe</p><p class="vibe-d">Elevated comfort, velvet, dark wood, gold accents.</p></div>
+    <div class="vibe-card" onclick="selectVibe(this,'Scandinavian Minimal')"><div class="vibe-sw"><span style="background:#ECEAE5"></span><span style="background:#D0CCC6"></span><span style="background:#A0998F"></span><span style="background:#2E2B28"></span></div><p class="vibe-n">Scandinavian Minimal</p><p class="vibe-d">Function first. Light wood, whites, negative space.</p></div>
+    <div class="vibe-card" onclick="selectVibe(this,'Eclectic Collected')"><div class="vibe-sw"><span style="background:#C4714A"></span><span style="background:#4A6741"></span><span style="background:#8B6B3D"></span><span style="background:#2C3E50"></span></div><p class="vibe-n">Eclectic Collected</p><p class="vibe-d">Layered eras, global textures. Vintage meets new.</p></div>
+  </div>
+  <div style="margin-top:1.2rem"><label class="fl">Upload inspiration photos (optional)</label><div class="upload-zone" onclick="document.getElementById('inspoFiles').click()" style="padding:1.1rem"><div style="font-size:20px;color:var(--clay);margin-bottom:5px"><i class="ti ti-heart" aria-hidden="true"></i></div><p class="ul-label"><strong>Pinterest screenshots,</strong> magazine clips, saved images</p><div class="file-list" id="inspoList"></div></div><input type="file" id="inspoFiles" class="hidden" multiple accept="image/*" onchange="handleFiles(this,'inspoList')"></div>
+</section>
+
+<!-- STEP 4 -->
+<section class="step-panel" id="step-3">
+  <div class="step-intro"><div class="step-num">04</div><div><h2 class="step-heading">Getting <em>scale</em> right</h2><p class="step-desc">Scale is the #1 DIY design mistake. Slide to your room width for instant furniture sizing.</p></div></div>
+  <div class="g2">
+    <div><div class="scale-tool"><label class="fl" style="margin-bottom:.9rem">Room width</label><div class="rng-wrap"><input type="range" min="8" max="30" value="14" id="rwRange" oninput="updateScale()" step="1"><span class="rng-val" id="rwVal">14 ft</span></div><div class="scale-vis" id="scaleVis"></div><div class="res-badge"><span style="font-size:11px;font-weight:400;color:rgba(253,250,245,.6)">Ideal sofa length</span><span id="sofaLen">84–96 in</span></div><div class="res-badge" style="margin-top:5px"><span style="font-size:11px;font-weight:400;color:rgba(253,250,245,.6)">Recommended rug</span><span id="rugSize">8×10</span></div></div></div>
+    <div><div class="tip"><p class="tip-t">2/3 sofa rule</p><p class="tip-b">A sofa should span no more than 2/3 of the wall it faces.</p></div><div class="tip" style="margin-top:10px"><p class="tip-t">Rug sizing</p><p class="tip-b">Front legs of all seating must sit on the rug minimum. A too-small rug is the single most common decorating mistake.</p></div><div class="tip" style="margin-top:10px"><p class="tip-t">Coffee table clearance</p><p class="tip-b">2/3 the sofa length, 16–18 in from sofa edge. Never taller than the seat cushion height.</p></div></div>
+  </div>
+</section>
+
+<!-- STEP 5 -->
+<section class="step-panel" id="step-4">
+  <div class="step-intro"><div class="step-num">05</div><div><h2 class="step-heading">What works — what <em>doesn't</em></h2><p class="step-desc">The professional principles that separate a polished room from one that almost gets there.</p></div></div>
+  <div class="rules-grid">
+    <div class="rule-card do"><p class="rule-head">Do</p><p class="rule-item">✓ Create a clear focal point first</p><p class="rule-item">✓ Float furniture 6–12 in from walls</p><p class="rule-item">✓ Allow 30–36 in for primary walkways</p><p class="rule-item">✓ Mix at least 3 different textures</p><p class="rule-item">✓ Use odd numbers for groupings</p><p class="rule-item">✓ Vary heights on every surface</p><p class="rule-item">✓ Hang art at 57–60 in center height</p><p class="rule-item">✓ Layer ambient, task, and accent light</p><p class="rule-item">✓ Let grout color be a design decision</p><p class="rule-item">✓ Match undertones across all finishes</p></div>
+    <div class="rule-card dont"><p class="rule-head">Don't</p><p class="rule-item">✗ Push all furniture against the walls</p><p class="rule-item">✗ Match everything — contrast creates interest</p><p class="rule-item">✗ Use a rug that's too small</p><p class="rule-item">✗ Hang art too high</p><p class="rule-item">✗ Rely on overhead lighting only</p><p class="rule-item">✗ Mix warm and cool undertones in finishes</p><p class="rule-item">✗ Use the same tile on floor and wall</p><p class="rule-item">✗ Pick paint before fabrics are decided</p><p class="rule-item">✗ Over-accessorize every surface</p><p class="rule-item">✗ Buy everything from one store</p></div>
+  </div>
+  <div class="g3" style="margin-top:1.1rem"><div class="tip" style="border-left-color:var(--terra)"><p class="tip-t" style="color:var(--terra)">Undertones matter</p><p class="tip-b" style="font-size:11.5px">Mixing a warm beige tile with a cool gray paint makes a room feel off. Pull undertones first.</p></div><div class="tip"><p class="tip-t">60-30-10 rule</p><p class="tip-b" style="font-size:11.5px">60% dominant, 30% secondary, 10% accent — in color and materials.</p></div><div class="tip" style="border-left-color:var(--sage)"><p class="tip-t" style="color:var(--sage)">Sample everything</p><p class="tip-b" style="font-size:11.5px">Paint a 12×12 sample and live with it 48 hours in different lighting before committing.</p></div></div>
+</section>
+
+<!-- STEP 6 -->
+<section class="step-panel" id="step-5">
+  <div class="step-intro"><div class="step-num">06</div><div><h2 class="step-heading">Set your <em>budget</em></h2><p class="step-desc">Your budget auto-allocates by category and informs finish and shop selections.</p></div></div>
+  <div class="g2">
+    <div>
+      <div class="field-group"><label class="fl">Total design budget</label><div class="rng-wrap"><input type="range" min="500" max="50000" value="8000" id="totalBudget" oninput="updateBudget()" step="500"><span class="rng-val" id="budgetVal">$8,000</span></div></div>
+      <div class="field-group" style="margin-top:1rem"><label class="fl" for="budgetRoom">Room type</label><select class="fi" id="budgetRoom" onchange="updateBudget()"><option value="living">Living Room</option><option value="bedroom">Bedroom</option><option value="dining">Dining Room</option><option value="office">Home Office</option><option value="kitchen">Kitchen / Bath</option></select></div>
+      <div id="budgetBreakdown"></div>
+    </div>
+    <div><div class="tip"><p class="tip-t">Where to invest</p><p class="tip-b">Spend the most on fixed items you can't easily swap — tile, counters, flooring.</p></div><div class="tip" style="margin-top:10px"><p class="tip-t">Splurge vs save</p><p class="tip-b"><strong style="font-weight:500">Splurge:</strong> Tile, flooring, lighting, sofa.<br><strong style="font-weight:500">Save:</strong> Pillows, throws, books, small decor.</p></div></div>
+  </div>
+</section>
+
+<!-- STEP 7: FINISHES -->
+<section class="step-panel" id="step-6">
+  <div class="step-intro"><div class="step-num">07</div><div><h2 class="step-heading">Choose your <em>finishes</em></h2><p class="step-desc">Select paint, tile, flooring, and more — everything flows into your final list with quantities and pricing.</p></div></div>
+  <div id="finishSelectedBar" style="display:none"><div class="finish-selected-bar"><span style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:500;flex-shrink:0">Selected:</span><div id="finishChips" style="display:flex;gap:6px;flex-wrap:wrap"></div></div></div>
+  <div class="finish-tabs"><button class="ftab active" onclick="switchFinishTab('paint',this)">Paint</button><button class="ftab" onclick="switchFinishTab('tile',this)">Tile</button><button class="ftab" onclick="switchFinishTab('flooring',this)">Flooring</button><button class="ftab" onclick="switchFinishTab('carpet',this)">Carpet</button><button class="ftab" onclick="switchFinishTab('counter',this)">Countertops</button><button class="ftab" onclick="switchFinishTab('hardware',this)">Hardware</button></div>
+  <div class="finish-panel active" id="fpaint"><p class="finish-category-label">Wall paint</p><div class="color-family-row"><button class="cf-btn active" onclick="filterPaint('all',this)">All</button><button class="cf-btn" onclick="filterPaint('white',this)">Whites</button><button class="cf-btn" onclick="filterPaint('neutral',this)">Neutrals</button><button class="cf-btn" onclick="filterPaint('warm',this)">Warms</button><button class="cf-btn" onclick="filterPaint('cool',this)">Cools</button><button class="cf-btn" onclick="filterPaint('bold',this)">Bolds</button></div><div class="swatch-grid" id="paintGrid"></div><div class="lrh-tip"><p class="lrh-tip-t">LH Designer note</p><p class="lrh-tip-b">Always pick your fabric and tile first — then choose your paint. A chip pulled against your sofa fabric will tell you everything.</p></div></div>
+  <div class="finish-panel" id="ftile"><p class="finish-category-label">Floor & wall tile</p><div class="color-family-row"><button class="cf-btn active" onclick="filterTile('all',this)">All</button><button class="cf-btn" onclick="filterTile('floor',this)">Floor tile</button><button class="cf-btn" onclick="filterTile('wall',this)">Wall tile</button><button class="cf-btn" onclick="filterTile('mosaic',this)">Mosaic</button><button class="cf-btn" onclick="filterTile('large',this)">Large format</button></div><div class="swatch-grid" id="tileGrid"></div><div class="lrh-tip"><p class="lrh-tip-t">LH Designer note</p><p class="lrh-tip-b">Grout color is a design decision. Matching grout makes tile disappear; contrasting grout makes the pattern pop. Order 15% extra for cuts and future repairs.</p></div></div>
+  <div class="finish-panel" id="fflooring"><p class="finish-category-label">Hardwood, LVP & engineered flooring</p><div class="color-family-row"><button class="cf-btn active" onclick="filterFloor('all',this)">All</button><button class="cf-btn" onclick="filterFloor('light',this)">Light wood</button><button class="cf-btn" onclick="filterFloor('medium',this)">Medium</button><button class="cf-btn" onclick="filterFloor('dark',this)">Dark wood</button><button class="cf-btn" onclick="filterFloor('lvp',this)">LVP</button></div><div class="swatch-grid" id="floorGrid"></div><div class="lrh-tip"><p class="lrh-tip-t">LH Designer note</p><p class="lrh-tip-b">Run flooring in the longest direction of the room — it elongates the space visually.</p></div></div>
+  <div class="finish-panel" id="fcarpet"><p class="finish-category-label">Carpet & wall-to-wall</p><div class="color-family-row"><button class="cf-btn active" onclick="filterCarpet('all',this)">All</button><button class="cf-btn" onclick="filterCarpet('neutral',this)">Neutral</button><button class="cf-btn" onclick="filterCarpet('plush',this)">Plush</button><button class="cf-btn" onclick="filterCarpet('pattern',this)">Patterned</button><button class="cf-btn" onclick="filterCarpet('berber',this)">Berber / loop</button></div><div class="swatch-grid" id="carpetGrid"></div><div class="lrh-tip"><p class="lrh-tip-t">LH Designer note</p><p class="lrh-tip-b">Carpet pad is as important as the carpet itself — a quality dense pad makes even mid-range carpet feel luxurious.</p></div></div>
+  <div class="finish-panel" id="fcounter"><p class="finish-category-label">Countertop surfaces</p><div class="color-family-row"><button class="cf-btn active" onclick="filterCounter('all',this)">All</button><button class="cf-btn" onclick="filterCounter('quartz',this)">Quartz</button><button class="cf-btn" onclick="filterCounter('marble',this)">Marble</button><button class="cf-btn" onclick="filterCounter('granite',this)">Granite</button><button class="cf-btn" onclick="filterCounter('butcher',this)">Butcher block</button></div><div class="swatch-grid" id="counterGrid"></div><div class="lrh-tip"><p class="lrh-tip-t">LH Designer note</p><p class="lrh-tip-b">Quartz is the most practical — non-porous, consistent, low maintenance. Real marble requires sealing and acceptance of etching.</p></div></div>
+  <div class="finish-panel" id="fhardware"><p class="finish-category-label">Cabinet hardware & plumbing fixtures</p><div class="color-family-row"><button class="cf-btn active" onclick="filterHardware('all',this)">All</button><button class="cf-btn" onclick="filterHardware('brass',this)">Brass / gold</button><button class="cf-btn" onclick="filterHardware('black',this)">Matte black</button><button class="cf-btn" onclick="filterHardware('chrome',this)">Chrome / nickel</button><button class="cf-btn" onclick="filterHardware('bronze',this)">Oil-rubbed bronze</button></div><div class="swatch-grid" id="hardwareGrid"></div><div class="lrh-tip"><p class="lrh-tip-t">LH Designer note</p><p class="lrh-tip-b">Commit to one metal family. Warm metals (brass, bronze) pair beautifully with natural materials.</p></div></div>
+</section>
+
+<!-- STEP 8: SHOP -->
+<section class="step-panel" id="step-7">
+  <div class="step-intro"><div class="step-num">08</div><div><h2 class="step-heading">Your curated <em>shop</em></h2><p class="step-desc">Products matched to your style and budget. Add pieces to your list.</p></div></div>
+  <div id="shopContent"></div>
+</section>
+
+<!-- STEP 9: SUBMIT -->
+<section class="step-panel" id="step-8">
+  <div class="step-intro"><div class="step-num">09</div><div><h2 class="step-heading">Your complete <em>design list</em></h2><p class="step-desc">Review your selections, fill in your contact info, and send everything to the Lake Hazel team.</p></div></div>
+  <div id="cartContent"></div>
+
+  <!-- CONTACT FORM -->
+  <div class="contact-form">
+    <h3 class="contact-form-title">Send your list to <em>Lake Hazel</em></h3>
+    <p class="contact-form-desc">Fill in your details below and your complete design list — every finish, product, and room detail — will be sent directly to our team. We'll be in touch within 1–2 business days.</p>
+    <div class="g2">
+      <div class="field-group"><label class="fl" for="clientName">Your name *</label><input class="fi" type="text" id="clientName" placeholder="First and last name"></div>
+      <div class="field-group"><label class="fl" for="clientEmail">Email address *</label><input class="fi" type="email" id="clientEmail" placeholder="you@email.com"></div>
+      <div class="field-group"><label class="fl" for="clientPhone">Phone number</label><input class="fi" type="tel" id="clientPhone" placeholder="(555) 000-0000"></div>
+      <div class="field-group"><label class="fl" for="clientCity">City / location</label><input class="fi" type="text" id="clientCity" placeholder="Salt Lake City, UT"></div>
+    </div>
+    <div class="field-group"><label class="fl" for="clientNotes">Anything else we should know?</label><textarea class="fi" id="clientNotes" placeholder="Timeline, special considerations, questions for the team..."></textarea></div>
+    <button class="submit-btn" id="submitBtn" onclick="submitToClickUp()">Send my design list to Lake Hazel →</button>
+    <div class="submit-status" id="submitStatus"></div>
+  </div>
+
+  <div class="summary-dark" style="margin-top:1.5rem">
+    <div class="sum-grid">
+      <div class="sum-section"><p class="sum-label">Room</p><p class="sum-val" id="sum-room">—</p></div>
+      <div class="sum-section"><p class="sum-label">Style</p><p class="sum-val" id="sum-style">—</p></div>
+      <div class="sum-section"><p class="sum-label">Square footage</p><p class="sum-val" id="sum-sqft">—</p></div>
+      <div class="sum-section"><p class="sum-label">Total budget</p><p class="sum-val" id="sum-budget">—</p></div>
+    </div>
+    <p style="font-size:12px;color:rgba(253,250,245,.5);line-height:1.7">Lake Hazel Design offers Designer For A Day ($600), Designer By Your Side ($1,700), and full Custom Design & PM packages. Our team will recommend the right service after reviewing your list.</p>
+  </div>
+</section>
+
+</main>
+</div>
+
+<footer class="nav-row">
+  <button class="btn-nav btn-back" id="backBtn" onclick="changeStep(-1)">← Back</button>
+  <span class="step-ctr" id="stepCtr">Step 1 of 9</span>
+  <button class="btn-nav btn-next" id="nextBtn" onclick="changeStep(1)">Next →</button>
+</footer>
+
+<script>
+const CU_TOKEN = 'pk_216140620_ETLPSXLMQFTHDKSTT05KEY9FPK2B98J2';
+const CU_LIST  = '901420998032';
+const CU_URL   = `https://api.clickup.com/api/v2/list/${CU_LIST}/task`;
+
+let currentStep=0,selectedVibe='',cart=[],selectedFinishes={};
+const TOTAL_STEPS=9;
+
+const PAINTS=[
+  {id:'p1',name:'Alabaster',brand:'Sherwin-Williams',code:'SW 7008',hex:'#F2EDE4',family:'white',price:72,unit:'per gallon'},
+  {id:'p2',name:'Shoji White',brand:'Sherwin-Williams',code:'SW 7042',hex:'#E8E1D5',family:'white',price:72,unit:'per gallon'},
+  {id:'p3',name:'Accessible Beige',brand:'Sherwin-Williams',code:'SW 7036',hex:'#D4C9B5',family:'neutral',price:72,unit:'per gallon'},
+  {id:'p4',name:'Agreeable Gray',brand:'Sherwin-Williams',code:'SW 7029',hex:'#CBBFAF',family:'neutral',price:72,unit:'per gallon'},
+  {id:'p5',name:'White Dove',brand:'Benjamin Moore',code:'OC-17',hex:'#F4EFE4',family:'white',price:78,unit:'per gallon'},
+  {id:'p6',name:'Chantilly Lace',brand:'Benjamin Moore',code:'OC-65',hex:'#F6F3EE',family:'white',price:78,unit:'per gallon'},
+  {id:'p7',name:'Swiss Coffee',brand:'Benjamin Moore',code:'OC-45',hex:'#EDE7DC',family:'white',price:78,unit:'per gallon'},
+  {id:'p8',name:'Revere Pewter',brand:'Benjamin Moore',code:'HC-172',hex:'#C2B9A7',family:'neutral',price:78,unit:'per gallon'},
+  {id:'p9',name:'Pale Oak',brand:'Benjamin Moore',code:'OC-20',hex:'#DACCBB',family:'neutral',price:78,unit:'per gallon'},
+  {id:'p10',name:'Hale Navy',brand:'Benjamin Moore',code:'HC-154',hex:'#3D4F5C',family:'cool',price:78,unit:'per gallon'},
+  {id:'p11',name:'Amherst Gray',brand:'Benjamin Moore',code:'HC-167',hex:'#8C8D86',family:'cool',price:78,unit:'per gallon'},
+  {id:'p12',name:'Sage',brand:'Benjamin Moore',code:'2143-40',hex:'#A4AD93',family:'cool',price:78,unit:'per gallon'},
+  {id:'p13',name:'Spiced Cider',brand:'Sherwin-Williams',code:'SW 6340',hex:'#C4834A',family:'warm',price:72,unit:'per gallon'},
+  {id:'p14',name:'Dried Thyme',brand:'Sherwin-Williams',code:'SW 6186',hex:'#7A8C6E',family:'cool',price:72,unit:'per gallon'},
+  {id:'p15',name:'Naval',brand:'Sherwin-Williams',code:'SW 6244',hex:'#2D3D4F',family:'bold',price:72,unit:'per gallon'},
+  {id:'p16',name:'Tricorn Black',brand:'Sherwin-Williams',code:'SW 6258',hex:'#2B2B2B',family:'bold',price:72,unit:'per gallon'},
+];
+const TILES=[
+  {id:'t1',name:'Matte white subway 3×6',brand:'Daltile',hex:'#F0ECE5',family:'wall',price:4.5,unit:'per sq ft'},
+  {id:'t2',name:'Warm cream zellige',brand:'Cle Tile',hex:'#D4C4A8',family:'wall',price:22,unit:'per sq ft',splurge:true},
+  {id:'t3',name:'Terracotta hex floor 4in',brand:'Fireclay',hex:'#C4714A',family:'floor',price:18,unit:'per sq ft'},
+  {id:'t4',name:'Marble look porcelain 24×48',brand:'MSI',hex:'#E8E4DC',family:'large',price:6.8,unit:'per sq ft',splurge:true},
+  {id:'t5',name:'White carrara mosaic',brand:'Daltile',hex:'#EDE9E2',family:'mosaic',price:12,unit:'per sq ft'},
+  {id:'t6',name:'Sage green handmade 4×4',brand:'Fireclay',hex:'#8A9E8C',family:'wall',price:16,unit:'per sq ft'},
+  {id:'t7',name:'Black matte hex 2in',brand:'Daltile',hex:'#2C2825',family:'floor',price:7.5,unit:'per sq ft'},
+  {id:'t8',name:'Travertine-look 18×18',brand:'MSI',hex:'#C8B89A',family:'large',price:5.9,unit:'per sq ft'},
+  {id:'t9',name:'Encaustic cement 8×8',brand:'Cement Tile Shop',hex:'#8B6B3D',family:'floor',price:19,unit:'per sq ft',splurge:true},
+  {id:'t10',name:'Glossy white 4×12 stacked',brand:'Daltile',hex:'#F5F2ED',family:'wall',price:3.8,unit:'per sq ft'},
+  {id:'t11',name:'Slate gray large format',brand:'MSI',hex:'#7A7A74',family:'large',price:5.2,unit:'per sq ft'},
+  {id:'t12',name:'Mixed pebble mosaic',brand:'Bedrosians',hex:'#A89880',family:'mosaic',price:14,unit:'per sq ft'},
+];
+const FLOORS=[
+  {id:'f1',name:'White oak wire-brushed 5in',brand:'Shaw Floors',hex:'#D4C4A0',family:'light',price:9.5,unit:'per sq ft',splurge:true},
+  {id:'f2',name:'Natural maple 4in plank',brand:'Bruce',hex:'#DDB97A',family:'light',price:7.2,unit:'per sq ft'},
+  {id:'f3',name:'French oak LVP 7in wide',brand:'COREtec',hex:'#C4A878',family:'lvp',price:5.8,unit:'per sq ft'},
+  {id:'f4',name:'Hickory hand-scraped 5in',brand:'Armstrong',hex:'#9C7A54',family:'medium',price:8.4,unit:'per sq ft'},
+  {id:'f5',name:'Walnut wide plank 6in',brand:'Carlisle',hex:'#6B4C35',family:'dark',price:14,unit:'per sq ft',splurge:true},
+  {id:'f6',name:'Ebony stained oak 4in',brand:'Shaw Floors',hex:'#3A2820',family:'dark',price:10.2,unit:'per sq ft'},
+  {id:'f7',name:'Gray wash LVP 6in',brand:'LifeProof',hex:'#B0ADA6',family:'lvp',price:4.2,unit:'per sq ft'},
+  {id:'f8',name:'Warm beige LVP 7in',brand:'COREtec',hex:'#C8B898',family:'lvp',price:4.8,unit:'per sq ft'},
+];
+const CARPETS=[
+  {id:'c1',name:'Ivory plush cut pile',brand:'Mohawk',hex:'#EEE8DE',family:'plush',price:4.2,unit:'per sq ft'},
+  {id:'c2',name:'Warm greige Saxony',brand:'Shaw',hex:'#C8BFAF',family:'neutral',price:3.8,unit:'per sq ft'},
+  {id:'c3',name:'Charcoal loop berber',brand:'Mohawk',hex:'#5A5650',family:'berber',price:3.2,unit:'per sq ft'},
+  {id:'c4',name:'Oatmeal textured loop',brand:'Anderson Tuftex',hex:'#D4CCBC',family:'berber',price:4.6,unit:'per sq ft'},
+  {id:'c5',name:'Sage green cut pile',brand:'Shaw',hex:'#8A9E8C',family:'neutral',price:4.0,unit:'per sq ft'},
+  {id:'c6',name:'Geometric pattern loop',brand:'Stanton',hex:'#A89880',family:'pattern',price:6.8,unit:'per sq ft',splurge:true},
+  {id:'c7',name:'Cream shag ultra-plush',brand:'Karastan',hex:'#F0EAE0',family:'plush',price:7.2,unit:'per sq ft',splurge:true},
+  {id:'c8',name:'Navajo pattern Berber',brand:'Stanton',hex:'#C4B098',family:'pattern',price:5.4,unit:'per sq ft'},
+];
+const COUNTERS=[
+  {id:'ct1',name:'Calacatta quartz',brand:'Cambria',hex:'#EDE8E0',family:'quartz',price:95,unit:'per sq ft installed',splurge:true},
+  {id:'ct2',name:'White concrete quartz',brand:'Silestone',hex:'#E0DBD3',family:'quartz',price:72,unit:'per sq ft installed'},
+  {id:'ct3',name:'Grigio quartz',brand:'MSI Q Premium',hex:'#B0ADA8',family:'quartz',price:68,unit:'per sq ft installed'},
+  {id:'ct4',name:'Carrara marble',brand:'Natural stone',hex:'#E8E4DC',family:'marble',price:110,unit:'per sq ft installed',splurge:true},
+  {id:'ct5',name:'Warm beige marble',brand:'Natural stone',hex:'#D4C8B4',family:'marble',price:105,unit:'per sq ft installed',splurge:true},
+  {id:'ct6',name:'White granite',brand:'Natural stone',hex:'#EAE6DE',family:'granite',price:82,unit:'per sq ft installed'},
+  {id:'ct7',name:'Black galaxy granite',brand:'Natural stone',hex:'#2A2825',family:'granite',price:78,unit:'per sq ft installed'},
+  {id:'ct8',name:'Walnut butcher block',brand:'Lumber Liquidators',hex:'#8B6240',family:'butcher',price:38,unit:'per sq ft installed'},
+];
+const HARDWARE=[
+  {id:'h1',name:'Satin brass cabinet pulls',brand:'Rejuvenation',emoji:'🟡',family:'brass',price:18,unit:'per pull'},
+  {id:'h2',name:'Unlacquered brass knobs',brand:'House of Antique Hardware',emoji:'🟠',family:'brass',price:14,unit:'per knob',splurge:true},
+  {id:'h3',name:'Brushed gold faucet',brand:'Delta',emoji:'🏅',family:'brass',price:189,unit:'each',splurge:true},
+  {id:'h4',name:'Matte black pulls 5in',brand:'Top Knobs',emoji:'⚫',family:'black',price:22,unit:'per pull'},
+  {id:'h5',name:'Matte black knobs',brand:'Hickory Hardware',emoji:'⚫',family:'black',price:12,unit:'per knob'},
+  {id:'h6',name:'Matte black faucet',brand:'Moen',emoji:'🖤',family:'black',price:149,unit:'each'},
+  {id:'h7',name:'Polished chrome pulls',brand:'Liberty Hardware',emoji:'⚪',family:'chrome',price:9,unit:'per pull'},
+  {id:'h8',name:'Brushed nickel knobs',brand:'Amerock',emoji:'🔘',family:'chrome',price:11,unit:'per knob'},
+  {id:'h9',name:'Oil-rubbed bronze pulls',brand:'Amerock',emoji:'🟤',family:'bronze',price:16,unit:'per pull'},
+  {id:'h10',name:'Oil-rubbed bronze faucet',brand:'Moen',emoji:'🟫',family:'bronze',price:169,unit:'each'},
+  {id:'h11',name:'Champagne bronze towel bar',brand:'Delta',emoji:'🌟',family:'brass',price:89,unit:'each'},
+  {id:'h12',name:'Flat black T-bar pulls',brand:'Emtek',emoji:'➖',family:'black',price:26,unit:'per pull',splurge:true},
+];
+const PRODUCTS={
+  'Warm Organic':{'Seating':[{id:'wo-s1',name:'Curved linen sofa',retailer:'Article',price:1899,emoji:'🛋',splurge:true},{id:'wo-s2',name:'Rattan accent chair',retailer:'Serena & Lily',price:649,emoji:'🪑'},{id:'wo-s3',name:'Boucle accent chair',retailer:'West Elm',price:799,emoji:'🪑'}],'Tables':[{id:'wo-t1',name:'Live edge coffee table',retailer:'Crate & Barrel',price:899,emoji:'▭',splurge:true},{id:'wo-t2',name:'Travertine side table',retailer:'CB2',price:349,emoji:'▭'}],'Rugs':[{id:'wo-r1',name:'Jute & wool blend 8×10',retailer:'Pottery Barn',price:699,emoji:'🟫',splurge:true},{id:'wo-r2',name:'Hand-tufted cotton 9×12',retailer:'Rugs USA',price:449,emoji:'🟫'}],'Lighting':[{id:'wo-l1',name:'Rattan pendant light',retailer:'Serena & Lily',price:329,emoji:'💡'},{id:'wo-l2',name:'Ceramic table lamp set',retailer:'World Market',price:189,emoji:'💡'}],'Accessories':[{id:'wo-a1',name:'Terra cotta pot set (3)',retailer:'CB2',price:89,emoji:'🪴'},{id:'wo-a2',name:'Linen throw pillow set',retailer:'Parachute',price:128,emoji:'🟤'},{id:'wo-a3',name:'Woven basket tray',retailer:'Target',price:49,emoji:'🧺'}]},
+  'Modern Classic':{'Seating':[{id:'mc-s1',name:'Boucle 3-seat sofa',retailer:'RH',price:3200,emoji:'🛋',splurge:true},{id:'mc-s2',name:'Velvet accent chair',retailer:'West Elm',price:849,emoji:'🪑'},{id:'mc-s3',name:'Channel tufted settee',retailer:'Anthropologie',price:1299,emoji:'🪑'}],'Tables':[{id:'mc-t1',name:'Marble top coffee table',retailer:'CB2',price:1199,emoji:'▭',splurge:true},{id:'mc-t2',name:'Brass side table',retailer:'Crate & Barrel',price:399,emoji:'▭'}],'Rugs':[{id:'mc-r1',name:'Wool geometric rug 8×10',retailer:'Arhaus',price:899,emoji:'🟦',splurge:true},{id:'mc-r2',name:'Ivory flatweave 9×12',retailer:'Rugs USA',price:389,emoji:'🟦'}],'Lighting':[{id:'mc-l1',name:'Brass arc floor lamp',retailer:'Rejuvenation',price:495,emoji:'💡',splurge:true},{id:'mc-l2',name:'Globe cluster pendant',retailer:'CB2',price:279,emoji:'💡'}],'Accessories':[{id:'mc-a1',name:'Brass object set (3)',retailer:'CB2',price:119,emoji:'🥇'},{id:'mc-a2',name:'Marble bookends',retailer:'Pottery Barn',price:79,emoji:'📖'},{id:'mc-a3',name:'Linen drapery panels (2)',retailer:'RH',price:249,emoji:'🪟'}]},
+  'California Casual':{'Seating':[{id:'cc-s1',name:'Low-profile sectional',retailer:'Article',price:2199,emoji:'🛋',splurge:true},{id:'cc-s2',name:'Woven swivel chair',retailer:'World Market',price:599,emoji:'🪑'}],'Tables':[{id:'cc-t1',name:'Bleached wood coffee table',retailer:'CB2',price:749,emoji:'▭'},{id:'cc-t2',name:'Rope side table',retailer:'Serena & Lily',price:299,emoji:'▭'}],'Rugs':[{id:'cc-r1',name:'Sage green wool 8×10',retailer:'Loloi',price:749,emoji:'🟩',splurge:true},{id:'cc-r2',name:'Stripe cotton 9×12',retailer:'Pottery Barn',price:449,emoji:'🟩'}],'Lighting':[{id:'cc-l1',name:'Woven jute pendant',retailer:'Serena & Lily',price:299,emoji:'💡'},{id:'cc-l2',name:'Linen drum lamp',retailer:'Target',price:99,emoji:'💡'}],'Accessories':[{id:'cc-a1',name:'Large fiddle leaf (faux)',retailer:'CB2',price:129,emoji:'🌿'},{id:'cc-a2',name:'Coastal linen throw',retailer:'Parachute',price:89,emoji:'🌊'}]},
+  'Transitional Luxe':{'Seating':[{id:'tl-s1',name:'Velvet performance sofa',retailer:'RH',price:3800,emoji:'🛋',splurge:true},{id:'tl-s2',name:'Leather accent chair',retailer:'Arhaus',price:1599,emoji:'🪑',splurge:true}],'Tables':[{id:'tl-t1',name:'Dark walnut coffee table',retailer:'Crate & Barrel',price:1099,emoji:'▭',splurge:true},{id:'tl-t2',name:'Gold & glass side table',retailer:'CB2',price:499,emoji:'▭'}],'Rugs':[{id:'tl-r1',name:'Persian-inspired wool 9×12',retailer:'Arhaus',price:1299,emoji:'🟥',splurge:true},{id:'tl-r2',name:'Dark pile rug 8×10',retailer:'Loloi',price:649,emoji:'🟥'}],'Lighting':[{id:'tl-l1',name:'Brushed gold chandelier',retailer:'RH',price:895,emoji:'✨',splurge:true},{id:'tl-l2',name:'Velvet shade table lamp',retailer:'Pottery Barn',price:199,emoji:'💡'}],'Accessories':[{id:'tl-a1',name:'Velvet throw pillow set',retailer:'RH',price:199,emoji:'🟣'},{id:'tl-a2',name:'Art deco mirror',retailer:'Anthropologie',price:349,emoji:'🪞'}]},
+  'Scandinavian Minimal':{'Seating':[{id:'sm-s1',name:'Clean-line linen sofa',retailer:'IKEA',price:899,emoji:'🛋'},{id:'sm-s2',name:'Sheepskin accent chair',retailer:'CB2',price:699,emoji:'🪑'}],'Tables':[{id:'sm-t1',name:'Solid oak coffee table',retailer:'Article',price:649,emoji:'▭',splurge:true},{id:'sm-t2',name:'White marble side table',retailer:'West Elm',price:299,emoji:'▭'}],'Rugs':[{id:'sm-r1',name:'White & oat flatweave 8×10',retailer:'Rugs USA',price:329,emoji:'⬜'},{id:'sm-r2',name:'Light wool loop 9×12',retailer:'Pottery Barn',price:599,emoji:'⬜',splurge:true}],'Lighting':[{id:'sm-l1',name:'Matte black arc floor lamp',retailer:'IKEA',price:119,emoji:'💡'},{id:'sm-l2',name:'Paper pendant light',retailer:'West Elm',price:149,emoji:'💡'}],'Accessories':[{id:'sm-a1',name:'Wood taper holders (5)',retailer:'CB2',price:79,emoji:'🕯'},{id:'sm-a2',name:'White ceramic vase set',retailer:'Target',price:59,emoji:'🏺'}]},
+  'Eclectic Collected':{'Seating':[{id:'ec-s1',name:'Jewel-tone velvet sofa',retailer:'Anthropologie',price:2499,emoji:'🛋',splurge:true},{id:'ec-s2',name:'Vintage rattan chair',retailer:'World Market',price:499,emoji:'🪑'}],'Tables':[{id:'ec-t1',name:'Mixed-material coffee table',retailer:'CB2',price:799,emoji:'▭'},{id:'ec-t2',name:'Moroccan mosaic side table',retailer:'World Market',price:189,emoji:'▭'}],'Rugs':[{id:'ec-r1',name:'Vintage Turkish rug 8×10',retailer:'Etsy',price:599,emoji:'🟧',splurge:true},{id:'ec-r2',name:'Kilim-style runner',retailer:'Rugs USA',price:249,emoji:'🟧'}],'Lighting':[{id:'ec-l1',name:'Maximalist floor lamp',retailer:'Anthropologie',price:449,emoji:'💡',splurge:true},{id:'ec-l2',name:'Ceramic lamp set',retailer:'World Market',price:149,emoji:'💡'}],'Accessories':[{id:'ec-a1',name:'Global art print set (3)',retailer:'Society6',price:129,emoji:'🖼'},{id:'ec-a2',name:'Mixed metal vases',retailer:'Anthropologie',price:179,emoji:'🏺'},{id:'ec-a3',name:'Woven wall hanging',retailer:'Etsy',price:89,emoji:'🎨'}]},
+};
+const BUDGET_ALLOCS={living:[{cat:'Sofa / seating',pct:32},{cat:'Rug',pct:14},{cat:'Lighting',pct:11},{cat:'Tables',pct:9},{cat:'Flooring / finishes',pct:12},{cat:'Art & accessories',pct:8},{cat:'Window treatments',pct:7},{cat:'Contingency',pct:7}],bedroom:[{cat:'Bed frame & headboard',pct:28},{cat:'Mattress',pct:22},{cat:'Lighting',pct:13},{cat:'Bedding',pct:11},{cat:'Flooring / finishes',pct:12},{cat:'Accessories',pct:7},{cat:'Contingency',pct:7}],dining:[{cat:'Dining table',pct:33},{cat:'Chairs',pct:26},{cat:'Chandelier',pct:16},{cat:'Rug',pct:10},{cat:'Finishes',pct:8},{cat:'Contingency',pct:7}],office:[{cat:'Desk',pct:26},{cat:'Chair',pct:20},{cat:'Shelving',pct:17},{cat:'Lighting',pct:13},{cat:'Rug',pct:10},{cat:'Finishes',pct:9},{cat:'Contingency',pct:5}],kitchen:[{cat:'Countertops',pct:28},{cat:'Tile',pct:20},{cat:'Hardware',pct:10},{cat:'Plumbing',pct:15},{cat:'Lighting',pct:12},{cat:'Accessories',pct:8},{cat:'Contingency',pct:7}]};
+
+function getSqft(){return parseFloat(document.getElementById('sqftVal').textContent)||150;}
+function calcSqft(){const l=parseFloat(document.getElementById('roomL').value)||0,w=parseFloat(document.getElementById('roomW').value)||0,h=parseFloat(document.getElementById('roomH').value)||0;if(l&&w){document.getElementById('sqftVal').textContent=Math.round(l*w)+' sq ft';const r=(l/w).toFixed(2);document.getElementById('ratioVal').textContent=(r>1.5?'Long & narrow':r<0.8?'Wide & short':'Well-proportioned')+' ('+r+':1)';if(h)document.getElementById('wallSqft').textContent=Math.round(2*(l+w)*h)+' sq ft';}}
+function updateScale(){const w=parseInt(document.getElementById('rwRange').value);document.getElementById('rwVal').textContent=w+' ft';const mn=Math.round(w*0.55*12),mx=Math.round(w*0.67*12);document.getElementById('sofaLen').textContent=mn+'–'+mx+' in';document.getElementById('rugSize').textContent=w<=10?'5×8':w<=14?'8×10':w<=18?'9×12':'10×14';const vis=document.getElementById('scaleVis');const pct=Math.round((mx/(w*12))*68);vis.innerHTML=`<div style="position:absolute;top:8px;left:8px;right:8px;bottom:8px;border:2px dashed var(--clay);border-radius:2px"><div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);width:${pct}%;height:24px;background:rgba(196,168,130,.3);border:1.5px solid var(--clay);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--clay-deep);font-weight:500;letter-spacing:1px">SOFA</div><div style="position:absolute;top:12px;left:8%;width:16%;height:34px;background:rgba(196,168,130,.2);border:1px solid var(--clay);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--clay-deep)">CHAIR</div><div style="position:absolute;top:12px;right:8%;width:16%;height:34px;background:rgba(196,168,130,.2);border:1px solid var(--clay);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--clay-deep)">CHAIR</div></div>`;}
+function updateBudget(){const total=parseInt(document.getElementById('totalBudget').value);document.getElementById('budgetVal').textContent='$'+total.toLocaleString();const room=document.getElementById('budgetRoom').value,allocs=BUDGET_ALLOCS[room];let html='<div class="budget-row hdr"><span>Category</span><span></span><span style="text-align:right">Amount</span></div>';allocs.forEach(a=>{const amt=Math.round(total*a.pct/100);html+=`<div class="budget-row"><div><span style="font-size:12px">${a.cat}</span><div class="bbar-wrap"><div class="bbar" style="width:${a.pct}%"></div></div></div><span style="color:var(--muted);font-size:10px">${a.pct}%</span><span style="color:var(--clay-deep);font-weight:500;text-align:right;font-size:12px">$${amt.toLocaleString()}</span></div>`;});html+=`<div class="btotal"><span class="btotal-l">Total</span><span class="btotal-a">$${total.toLocaleString()}</span></div>`;document.getElementById('budgetBreakdown').innerHTML=html;}
+function selectVibe(el,name){document.querySelectorAll('.vibe-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');selectedVibe=name;}
+function handleFiles(input,listId){const list=document.getElementById(listId);list.innerHTML='';Array.from(input.files).forEach(f=>{const chip=document.createElement('span');chip.className='fchip';chip.innerHTML=`<i class="ti ti-file" aria-hidden="true"></i>${f.name.length>20?f.name.substring(0,20)+'…':f.name}`;list.appendChild(chip);});}
+
+function renderSwatchGrid(containerId,items,type){
+  const sqft=getSqft();let html='';
+  items.forEach(item=>{
+    const isSel=selectedFinishes[item.id];
+    const isHw=type==='hardware'||type==='counter';
+    const qty=isHw?1:type==='paint'?Math.ceil(sqft/350):Math.ceil(sqft*1.15);
+    const est=isHw?item.price:Math.round(item.price*qty);
+    const qLabel=type==='paint'?` · ~${qty} gal = $${est.toLocaleString()}`:isHw?'':` · ~${qty} sq ft = $${est.toLocaleString()}`;
+    html+=`<div class="swatch-card ${isSel?'selected':''}" id="sw-${item.id}">${item.hex?`<div class="swatch-color" style="background:${item.hex}"></div>`:`<div class="swatch-pattern">${item.emoji||'◼'}</div>`}<div class="swatch-body"><p class="swatch-name">${item.name}${item.splurge?' ★':''}</p>${item.code?`<p class="swatch-meta">${item.code}</p>`:''}<p class="swatch-brand">${item.brand}</p><p class="swatch-price">$${item.price.toLocaleString()} ${item.unit}${qLabel}</p><button class="finish-add-btn ${isSel?'added':''}" id="fbtn-${item.id}" onclick="toggleFinish('${item.id}','${type}')">${isSel?'✓ Selected':'+ Select'}</button></div></div>`;
+  });
+  document.getElementById(containerId).innerHTML=html||'<p style="color:var(--muted);font-size:13px;padding:1rem 0">No items in this filter.</p>';
+}
+function toggleFinish(id,type){
+  const maps={paint:PAINTS,tile:TILES,flooring:FLOORS,carpet:CARPETS,counter:COUNTERS,hardware:HARDWARE};
+  const item=maps[type].find(d=>d.id===id);if(!item)return;
+  const sqft=getSqft();const isHw=type==='hardware'||type==='counter';
+  const qty=isHw?1:type==='paint'?Math.ceil(sqft/350):Math.ceil(sqft*1.15);
+  const est=isHw?item.price:Math.round(item.price*qty);
+  if(selectedFinishes[id]){delete selectedFinishes[id];const idx=cart.findIndex(c=>c.id===id);if(idx>-1)cart.splice(idx,1);}
+  else{selectedFinishes[id]=true;cart.push({...item,category:'Finishes — '+type.charAt(0).toUpperCase()+type.slice(1),price:est,retailer:item.brand,emoji:item.emoji||'🎨',isFinish:true});}
+  document.getElementById('cartCount').textContent=cart.length;
+  const btn=document.getElementById('fbtn-'+id),sw=document.getElementById('sw-'+id);
+  if(btn){btn.textContent=selectedFinishes[id]?'✓ Selected':'+ Select';btn.classList.toggle('added',!!selectedFinishes[id]);}
+  if(sw)sw.classList.toggle('selected',!!selectedFinishes[id]);
+  updateFinishChips();
+}
+function updateFinishChips(){
+  const bar=document.getElementById('finishSelectedBar'),chips=document.getElementById('finishChips');
+  const keys=Object.keys(selectedFinishes);bar.style.display=keys.length?'block':'none';
+  const all=[...PAINTS,...TILES,...FLOORS,...CARPETS,...COUNTERS,...HARDWARE];
+  chips.innerHTML=keys.map(id=>{const item=all.find(d=>d.id===id);if(!item)return'';return`<span class="finish-chip"><span class="finish-chip-dot" style="${item.hex?`background:${item.hex}`:'background:var(--sand)'}"></span>${item.name}<span class="finish-chip-x" onclick="toggleFinish('${id}','${getFinishType(id)}')" aria-label="Remove">×</span></span>`;}).join('');
+}
+function getFinishType(id){if(PAINTS.find(d=>d.id===id))return'paint';if(TILES.find(d=>d.id===id))return'tile';if(FLOORS.find(d=>d.id===id))return'flooring';if(CARPETS.find(d=>d.id===id))return'carpet';if(COUNTERS.find(d=>d.id===id))return'counter';return'hardware';}
+function switchFinishTab(tab,btn){document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.finish-panel').forEach(p=>p.classList.remove('active'));document.getElementById('f'+tab).classList.add('active');const maps={paint:['paintGrid',PAINTS],tile:['tileGrid',TILES],flooring:['floorGrid',FLOORS],carpet:['carpetGrid',CARPETS],counter:['counterGrid',COUNTERS],hardware:['hardwareGrid',HARDWARE]};if(maps[tab])renderSwatchGrid(maps[tab][0],maps[tab][1],tab);}
+function makeFilter(items,grid,type,field,val,btn,rowSel){document.querySelectorAll(rowSel+' .cf-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderSwatchGrid(grid,val==='all'?items:items.filter(i=>i[field]===val),type);}
+function filterPaint(v,b){makeFilter(PAINTS,'paintGrid','paint','family',v,b,'#fpaint .color-family-row');}
+function filterTile(v,b){makeFilter(TILES,'tileGrid','tile','family',v,b,'#ftile .color-family-row');}
+function filterFloor(v,b){makeFilter(FLOORS,'floorGrid','flooring','family',v,b,'#fflooring .color-family-row');}
+function filterCarpet(v,b){makeFilter(CARPETS,'carpetGrid','carpet','family',v,b,'#fcarpet .color-family-row');}
+function filterCounter(v,b){makeFilter(COUNTERS,'counterGrid','counter','family',v,b,'#fcounter .color-family-row');}
+function filterHardware(v,b){makeFilter(HARDWARE,'hardwareGrid','hardware','family',v,b,'#fhardware .color-family-row');}
+
+function buildShop(){
+  const vibe=selectedVibe||'Warm Organic';const prods=PRODUCTS[vibe]||PRODUCTS['Warm Organic'];
+  let html=`<div class="style-badge"><i class="ti ti-palette" aria-hidden="true" style="font-size:11px;margin-right:2px"></i>Showing picks for: ${vibe}</div>`;
+  html+=`<div class="prod-filter-row"><button class="filt-btn active" onclick="filterShop('all',this)">All</button><button class="filt-btn" onclick="filterShop('Seating',this)">Seating</button><button class="filt-btn" onclick="filterShop('Tables',this)">Tables</button><button class="filt-btn" onclick="filterShop('Rugs',this)">Rugs</button><button class="filt-btn" onclick="filterShop('Lighting',this)">Lighting</button><button class="filt-btn" onclick="filterShop('Accessories',this)">Accessories</button></div>`;
+  Object.entries(prods).forEach(([cat,items])=>{html+=`<div class="prod-section" data-cat="${cat}"><div class="prod-section-head"><h3 class="prod-section-title">${cat}</h3></div><div class="prod-grid">`;items.forEach(p=>{const inCart=cart.find(c=>c.id===p.id);html+=`<div class="prod-card"><div class="prod-img">${p.emoji}</div><div class="prod-body"><p class="prod-name">${p.name}</p><p class="prod-retailer">${p.retailer}${p.splurge?' · ★ Splurge':''}</p><p class="prod-price">$${p.price.toLocaleString()}</p><div class="prod-footer"><span class="prod-style-tag">${cat.toLowerCase()}</span><button class="btn-add ${inCart?'added':''}" id="btn-${p.id}" onclick="toggleCart('${p.id}')">${inCart?'✓ Added':'+ Add'}</button></div></div></div>`;});html+='</div></div>';});
+  document.getElementById('shopContent').innerHTML=html;
+}
+function filterShop(cat,btn){document.querySelectorAll('.filt-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.prod-section').forEach(s=>{s.style.display=(cat==='all'||s.dataset.cat===cat)?'block':'none';});}
+function toggleCart(id){const vibe=selectedVibe||'Warm Organic';const prods=PRODUCTS[vibe]||PRODUCTS['Warm Organic'];let prod=null;Object.entries(prods).forEach(([cat,items])=>{const f=items.find(p=>p.id===id);if(f)prod={...f,category:cat};});if(!prod)return;const idx=cart.findIndex(c=>c.id===id);if(idx>-1){cart.splice(idx,1);}else{cart.push(prod);}document.getElementById('cartCount').textContent=cart.length;const btn=document.getElementById('btn-'+id);if(btn){const inCart=!!cart.find(c=>c.id===id);btn.textContent=inCart?'✓ Added':'+ Add';btn.classList.toggle('added',inCart);}}
+
+function buildCart(){
+  const budget=parseInt(document.getElementById('totalBudget').value)||8000;
+  const total=cart.reduce((s,p)=>s+p.price,0);
+  const pct=Math.min(Math.round((total/budget)*100),100);const over=total>budget;
+  const fi=cart.filter(i=>i.isFinish),fu=cart.filter(i=>!i.isFinish);
+  let html='';
+  if(cart.length===0){html=`<div class="cart-empty"><i class="ti ti-shopping-bag" aria-hidden="true" style="font-size:28px;display:block;margin-bottom:10px;color:var(--sand-dark)"></i><p style="font-size:13px">No items added yet.</p><p style="font-size:11px;margin-top:6px;color:var(--muted)">Visit the Finishes and Shop steps to build your list.</p></div>`;}
+  else{
+    html='<div class="cart-header-row"><span>Item</span><span>Source</span><span style="text-align:right">Est. cost</span><span></span></div>';
+    if(fi.length){html+='<p class="section-divider">Finishes & materials</p>';fi.forEach(p=>{html+=cartRow(p);});}
+    if(fu.length){html+='<p class="section-divider">Furnishings & accessories</p>';fu.forEach(p=>{html+=cartRow(p);});}
+    html+=`<div class="cart-total-row"><span class="cart-total-l">Estimated total</span><span class="cart-total-a" style="color:${over?'var(--terra)':'var(--charcoal)'}">${over?'⚠ ':''} $${total.toLocaleString()}</span></div>`;
+    html+=`<div class="cart-budget-bar"><div class="cart-budget-fill" style="width:${pct}%;background:${over?'var(--terra)':'var(--clay)'}"></div></div>`;
+    html+=`<div class="cart-budget-label"><span>${pct}% of $${budget.toLocaleString()} budget used</span><span style="${over?'color:var(--terra)':''}">${over?'$'+(total-budget).toLocaleString()+' over budget':'$'+(budget-total).toLocaleString()+' remaining'}</span></div>`;
+  }
+  document.getElementById('cartContent').innerHTML=html;
+  document.getElementById('sum-room').textContent=document.getElementById('roomType').value||'—';
+  document.getElementById('sum-style').textContent=selectedVibe||'—';
+  document.getElementById('sum-sqft').textContent=document.getElementById('sqftVal').textContent||'—';
+  document.getElementById('sum-budget').textContent=document.getElementById('budgetVal').textContent||'—';
+}
+function cartRow(p){return`<div class="cart-item"><div><p class="ci-name">${p.emoji||''} ${p.name}</p><p class="ci-cat">${p.category}</p></div><span class="ci-retailer">${p.retailer}</span><span class="ci-price">$${p.price.toLocaleString()}</span><span class="ci-remove" onclick="removeItem('${p.id}',${!!p.isFinish})" role="button" aria-label="Remove ${p.name}"><i class="ti ti-x"></i></span></div>`;}
+function removeItem(id,isFinish){const idx=cart.findIndex(c=>c.id===id);if(idx>-1)cart.splice(idx,1);if(isFinish){delete selectedFinishes[id];updateFinishChips();const btn=document.getElementById('fbtn-'+id),sw=document.getElementById('sw-'+id);if(btn){btn.textContent='+ Select';btn.classList.remove('added');}if(sw)sw.classList.remove('selected');}else{const btn=document.getElementById('btn-'+id);if(btn){btn.textContent='+ Add';btn.classList.remove('added');}}document.getElementById('cartCount').textContent=cart.length;buildCart();}
+
+/* ══════════════════════════════════════
+   CLICKUP SUBMISSION
+══════════════════════════════════════ */
+async function submitToClickUp(){
+  const name  = document.getElementById('clientName').value.trim();
+  const email = document.getElementById('clientEmail').value.trim();
+  const phone = document.getElementById('clientPhone').value.trim();
+  const city  = document.getElementById('clientCity').value.trim();
+  const notes = document.getElementById('clientNotes').value.trim();
+  const statusEl = document.getElementById('submitStatus');
+  const btn = document.getElementById('submitBtn');
+
+  if(!name){alert('Please enter your name.');return;}
+  if(!email){alert('Please enter your email address.');return;}
+
+  btn.disabled=true;
+  btn.textContent='Sending…';
+  statusEl.className='submit-status';
+  statusEl.style.display='none';
+
+  const budget  = parseInt(document.getElementById('totalBudget').value)||8000;
+  const roomT   = document.getElementById('roomType').value||'Not specified';
+  const roomUse = document.getElementById('roomUse').value||'';
+  const pain    = document.getElementById('painPoints').value||'';
+  const sqft    = document.getElementById('sqftVal').textContent||'—';
+  const total   = cart.reduce((s,p)=>s+p.price,0);
+  const fi      = cart.filter(i=>i.isFinish);
+  const fu      = cart.filter(i=>!i.isFinish);
+
+  const finishLines = fi.length
+    ? fi.map(p=>`  • ${p.name} (${p.retailer}) — $${p.price.toLocaleString()}`).join('\n')
+    : '  None selected';
+  const furnLines = fu.length
+    ? fu.map(p=>`  • ${p.name} | ${p.category} | ${p.retailer} — $${p.price.toLocaleString()}`).join('\n')
+    : '  None selected';
+  const over = total > budget;
+  const budgetLine = over
+    ? `$${total.toLocaleString()} (⚠ $${(total-budget).toLocaleString()} over budget)`
+    : `$${total.toLocaleString()} ($${(budget-total).toLocaleString()} remaining)`;
+
+  const description = `🏠 DIY DESIGN KIT SUBMISSION
+Submitted via lakehazeldesign.com
+
+━━━ CLIENT INFO ━━━
+Name:    ${name}
+Email:   ${email}
+Phone:   ${phone||'Not provided'}
+City:    ${city||'Not provided'}
+
+━━━ ROOM DETAILS ━━━
+Room type:      ${roomT}
+Style:          ${selectedVibe||'Not selected'}
+Square footage: ${sqft}
+Total budget:   $${budget.toLocaleString()}
+Primary use:    ${roomUse||'Not provided'}
+Pain points:    ${pain||'Not provided'}
+
+━━━ FINISHES & MATERIALS ━━━
+${finishLines}
+
+━━━ FURNISHINGS & ACCESSORIES ━━━
+${furnLines}
+
+━━━ LIST TOTAL ━━━
+${budgetLine}
+
+━━━ NOTES FROM CLIENT ━━━
+${notes||'None'}`;
+
+  const taskName = `DIY Kit — ${name} — ${roomT} (${selectedVibe||'Style TBD'})`;
+
+  try{
+    const res = await fetch(CU_URL, {
+      method: 'POST',
+      headers: {
+        'Authorization': CU_TOKEN,
+        'Content-Type':  'application/json'
+      },
+      body: JSON.stringify({
+        name: taskName,
+        description: description,
+        priority: 2,
+        status: 'Open',
+        custom_fields: []
+      })
+    });
+
+    if(res.ok){
+      const data = await res.json();
+      statusEl.className='submit-status success';
+      statusEl.innerHTML=`<p class="submit-status-title">✓ Your list has been sent to Lake Hazel!</p><p style="font-size:12px;margin-top:4px">We'll review your design brief and be in touch within 1–2 business days at <strong>${email}</strong>. We're excited to see your space!</p>`;
+      btn.textContent='List sent ✓';
+      btn.style.background='var(--sage)';
+      btn.style.borderColor='var(--sage)';
+    } else {
+      const err = await res.json().catch(()=>({}));
+      throw new Error(err.err||`Status ${res.status}`);
+    }
+  } catch(e){
+    statusEl.className='submit-status error';
+    statusEl.innerHTML=`<p class="submit-status-title">Something went wrong</p><p style="font-size:12px;margin-top:4px">Error: ${e.message}. Please email your list directly to <a href="mailto:info@lakehazeldesign.com" style="color:var(--terra)">info@lakehazeldesign.com</a>.</p>`;
+    btn.disabled=false;
+    btn.textContent='Try again →';
+  }
+}
+
+/* ══════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════ */
+function goToStep(n){
+  if(n<0||n>=TOTAL_STEPS)return;
+  document.getElementById('step-'+currentStep).classList.remove('active');
+  document.querySelectorAll('.step-tab').forEach((t,i)=>{t.classList.remove('active','done');if(i<n)t.classList.add('done');if(i===n)t.classList.add('active');});
+  currentStep=n;
+  document.getElementById('step-'+currentStep).classList.add('active');
+  document.getElementById('stepCtr').textContent='Step '+(currentStep+1)+' of '+TOTAL_STEPS;
+  document.getElementById('backBtn').style.visibility=currentStep===0?'hidden':'visible';
+  document.getElementById('nextBtn').textContent=currentStep===TOTAL_STEPS-1?'Done':'Next →';
+  document.querySelector('.content-wrap').scrollTop=0;
+  if(currentStep===6)renderSwatchGrid('paintGrid',PAINTS,'paint');
+  if(currentStep===7)buildShop();
+  if(currentStep===8)buildCart();
+}
+function changeStep(dir){goToStep(currentStep+dir);}
+
+updateBudget();updateScale();
+document.getElementById('backBtn').style.visibility='hidden';
+</script>
+</body>
+</html>
