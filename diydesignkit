@@ -374,9 +374,7 @@ textarea.fi{resize:vertical;min-height:75px}
 </footer>
 
 <script>
-const CU_TOKEN = 'pk_216140620_ETLPSXLMQFTHDKSTT05KEY9FPK2B98J2';
-const CU_LIST  = '901420998032';
-const CU_URL   = `https://api.clickup.com/api/v2/list/${CU_LIST}/task`;
+const CU_URL   = '/api/submit';
 
 let currentStep=0,selectedVibe='',cart=[],selectedFinishes={};
 const TOTAL_STEPS=9;
@@ -622,18 +620,15 @@ ${notes||'None'}`;
   const taskName = `DIY Kit — ${name} — ${roomT} (${selectedVibe||'Style TBD'})`;
 
   try{
-    const res = await fetch(CU_URL, {
+    const res = await fetch('/api/submit', {
       method: 'POST',
       headers: {
-        'Authorization': CU_TOKEN,
-        'Content-Type':  'application/json'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         name: taskName,
         description: description,
-        priority: 2,
-        status: 'Open',
-        custom_fields: []
+        priority: 2
       })
     });
 
